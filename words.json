@@ -1,0 +1,76 @@
+{
+  "sets": [
+    {
+      "id": "animals",
+      "name": "Animals",
+      "pairs": [
+        ["chien", "dog", "🐶"], ["chat", "cat", "🐱"], ["oiseau", "bird", "🐦"], ["poisson", "fish", "🐟"], ["lapin", "rabbit", "🐰"], ["cheval", "horse", "🐴"],
+        ["vache", "cow", "🐄"], ["mouton", "sheep", "🐑"], ["cochon", "pig", "🐷"], ["poule", "chicken", "🐔"], ["canard", "duck", "🦆"], ["souris", "mouse", "🐭"],
+        ["tigre", "tiger", "🐯"], ["dragon", "dragon", "🐉"], ["serpent", "snake", "🐍"], ["singe", "monkey", "🐵"], ["ours", "bear", "🐻"], ["loup", "wolf", "🐺"],
+        ["éléphant", "elephant", "🐘"], ["cerf", "deer", "🦌"], ["renard", "fox", "🦊"], ["panda", "panda", "🐼"], ["lion", "lion", "🦁"], ["abeille", "bee", "🐝"],
+        ["papillon", "butterfly", "🦋"], ["fourmi", "ant", "🐜"], ["araignée", "spider", "🕷️"], ["crabe", "crab", "🦀"], ["grenouille", "frog", "🐸"], ["tortue", "turtle", "🐢"],
+        ["crocodile", "crocodile", "🐊"], ["pingouin", "penguin", "🐧"], ["hibou", "owl", "🦉"], ["chauve-souris", "bat", "🦇"], ["hérisson", "hedgehog", "🦔"], ["kangourou", "kangaroo", "🦘"],
+        ["koala", "koala", "🐨"], ["girafe", "giraffe", "🦒"], ["zèbre", "zebra", "🦓"], ["hippopotame", "hippo", "🦛"], ["rhinocéros", "rhino", "🦏"], ["orang-outan", "orangutan", "🦧"],
+        ["écureuil", "squirrel", "🐿️"], ["dauphin", "dolphin", "🐬"], ["baleine", "whale", "🐋"], ["requin", "shark", "🦈"], ["étoile de mer", "starfish", "⭐"], ["poulpe", "octopus", "🐙"],
+        ["escargot", "snail", "🐌"], ["ver de terre", "earthworm", "🪱"], ["coccinelle", "ladybug", "🐞"], ["libellule", "dragonfly", "🦋"], ["criquet", "cricket", "🦗"], ["luciole", "firefly", "✨"]
+      ]
+    },
+    {
+      "id": "colors",
+      "name": "Colors",
+      "pairs": [
+        ["rouge", "red", "🔴"], ["bleu", "blue", "🔵"], ["jaune", "yellow", "🟡"], ["vert", "green", "🟢"], ["noir", "black", "⚫"], ["blanc", "white", "⚪"],
+        ["orange", "orange", "🟠"], ["violet", "purple", "🟣"], ["rose", "pink", "🌸"], ["marron", "brown", "🟤"], ["gris", "grey", "◻️"], ["or", "gold", "✨"],
+        ["argent", "silver", "⚪"], ["cyan", "cyan", "💎"], ["beige", "beige", "🍚"], ["bleu foncé", "dark blue", "🔵"], ["vert clair", "light green", "🟢"], ["rouge foncé", "dark red", "🔴"],
+        ["bleu ciel", "sky blue", "🔵"], ["jaune citron", "lemon yellow", "🟡"], ["vert olive", "olive green", "🟢"], ["rose", "rose red", "🔴"], ["bleu marine", "navy blue", "🔵"], ["vert menthe", "mint green", "🟢"],
+        ["pêche", "peach", "🍑"], ["lavande", "lavender", "🟣"], ["corail", "coral", "🪸"], ["indigo", "indigo", "🟣"], ["tan", "tan", "🟤"], ["crème", "cream", "🥛"],
+        ["bordeaux", "maroon", "🔴"], ["citron vert", "lime", "🟢"], ["ambre", "amber", "🟡"], ["émeraude", "emerald", "💎"], ["vermillon", "vermilion", "🔴"], ["bleu marine", "navy", "🔵"],
+        ["ivoire", "ivory", "⚪"], ["charbon", "charcoal", "◻️"], ["auburn", "auburn", "🟤"], ["magenta", "magenta", "🟣"], ["sarcelle", "teal", "🟢"], ["abricot", "apricot", "🟡"],
+        ["écarlate", "scarlet", "🔴"], ["bleu cobalt", "cobalt blue", "🔵"], ["olive", "olive", "🟢"], ["violet", "violet", "🟣"], ["blé", "wheat", "🟡"], ["ardoise", "slate grey", "◻️"]
+      ]
+    },
+    {
+      "id": "numbers",
+      "name": "Numbers",
+      "pairs": [
+        ["un", "one", "1️⃣"], ["deux", "two", "2️⃣"], ["trois", "three", "3️⃣"], ["quatre", "four", "4️⃣"], ["cinq", "five", "5️⃣"], ["six", "six", "6️⃣"],
+        ["sept", "seven", "7️⃣"], ["huit", "eight", "8️⃣"], ["neuf", "nine", "9️⃣"], ["dix", "ten", "🔟"], ["zéro", "zero", "0️⃣"], ["cent", "hundred", "💯"],
+        ["mille", "thousand", "🔢"], ["moitié", "half", "➗"], ["deux (comptage)", "two (counting)", "2️⃣"], ["premier", "first", "1️⃣"], ["deuxième", "second", "2️⃣"], ["troisième", "third", "3️⃣"],
+        ["combien", "how many", "❓"], ["beaucoup", "many", "📦"], ["peu", "few", "📉"], ["paire", "pair", "2️⃣"], ["douzaine", "dozen", "1️⃣2️⃣"], ["fois", "times", "✖️"],
+        ["plus", "plus", "➕"], ["moins", "minus", "➖"], ["multiplier", "multiply", "✖️"], ["diviser", "divide", "➗"], ["égale", "equals", "🟰"], ["nombre", "number", "🔢"],
+        ["impair", "odd number", "1️⃣"], ["pair", "even number", "2️⃣"], ["fraction", "fraction", "½"], ["décimal", "decimal", "1.5"], ["pour cent", "percent", "%"], ["multiple", "multiple", "✖️"],
+        ["quantité", "quantity", "📊"], ["ordre", "order", "1️⃣2️⃣3️⃣"], ["compte à rebours", "countdown", "⏱️"], ["entier", "whole number", "🔢"], ["double", "double", "2️⃣"], ["simple", "single", "1️⃣"],
+        ["adolescents", "teens", "1️⃣🔟"], ["dizaines", "tens", "🔟"], ["reste", "odd", "🔢"], ["entier", "whole", "1️⃣"], ["reste", "remainder", "➗"], ["environ", "approximately", "≈"]
+      ]
+    },
+    {
+      "id": "family",
+      "name": "Family",
+      "pairs": [
+        ["maman", "mom", "👩"], ["papa", "dad", "👨"], ["frère aîné", "older brother", "👦"], ["sœur aînée", "older sister", "👧"], ["frère cadet", "younger brother", "👦"], ["sœur cadette", "younger sister", "👧"],
+        ["papi", "grandpa", "👴"], ["mamie", "grandma", "👵"], ["bébé", "baby", "👶"], ["famille", "family", "🏠"], ["grand-père (maternel)", "grandpa (maternal)", "👴"], ["grand-mère (maternelle)", "grandma (maternal)", "👵"],
+        ["oncle", "uncle", "👨"], ["tante", "aunt", "👩"], ["ami", "friend", "👫"], ["fils", "son", "👦"], ["fille", "daughter", "👧"], ["mari", "husband", "👨"],
+        ["femme", "wife", "👩"], ["parents", "parents", "👨👩"], ["frères", "brothers", "👦👦"], ["sœurs", "sisters", "👧👧"], ["grands-parents", "grandparents", "👴👵"], ["petit-fils", "grandson", "👦"],
+        ["petite-fille", "granddaughter", "👧"], ["cousin", "male cousin", "👦"], ["cousine", "female cousin", "👧"], ["neveu", "nephew", "👦"], ["nièce", "niece", "👧"], ["cousin (paternel)", "cousin (paternal)", "👦"],
+        ["parents", "relatives", "👨👩"], ["voisin", "neighbor", "🏠"], ["camarade", "classmate", "📚"], ["professeur", "teacher", "👩‍🏫"], ["élève", "student", "📖"], ["adulte", "adult", "👨"],
+        ["enfant", "child", "👶"], ["homme", "man", "👨"], ["femme", "woman", "👩"], ["garçon", "boy", "👦"], ["fille", "girl", "👧"], ["jumeaux", "twins", "👫"],
+        ["marié", "groom", "👨"], ["mariée", "bride", "👩"], ["beau-père", "stepfather", "👨"], ["belle-mère", "stepmother", "👩"], ["fils adoptif", "adopted son", "👦"], ["famille", "family members", "👨👩👧👦"]
+      ]
+    },
+    {
+      "id": "verbs",
+      "name": "Verbs",
+      "pairs": [
+        ["courir", "run", "🏃"], ["marcher", "walk", "🚶"], ["manger", "eat", "🍽️"], ["boire", "drink", "🥤"], ["dormir", "sleep", "😴"], ["voir", "see", "👀"],
+        ["écouter", "listen", "👂"], ["dire", "say", "🗣️"], ["lire", "read", "📖"], ["écrire", "write", "✍️"], ["chanter", "sing", "🎤"], ["jouer", "play", "🎮"],
+        ["étudier", "study", "📚"], ["travailler", "work", "💼"], ["aimer", "love", "❤️"], ["aimer", "like", "👍"], ["penser", "think", "🤔"], ["venir", "come", "👉"],
+        ["aller", "go", "👋"], ["acheter", "buy", "🛒"], ["ouvrir", "open", "📂"], ["fermer", "close", "❌"], ["demander", "ask", "❓"], ["aider", "help", "🆘"],
+        ["donner", "give", "🎁"], ["prendre", "take", "✋"], ["mettre", "put", "📍"], ["s'asseoir", "sit", "🪑"], ["debout", "stand", "🧍"], ["voler", "fly", "✈️"],
+        ["nager", "swim", "🏊"], ["grimper", "climb", "🧗"], ["sauter", "jump", "⬆️"], ["attendre", "wait", "⏳"], ["enseigner", "teach", "👩‍🏫"], ["apprendre", "learn", "📖"],
+        ["commencer", "start", "▶️"], ["finir", "finish", "🏁"], ["oublier", "forget", "🤷"], ["se souvenir", "remember", "🧠"], ["essayer", "try", "💪"], ["avoir besoin", "need", "📌"],
+        ["vouloir", "want", "🙏"], ["faire", "do", "✅"], ["trouver", "find", "🔍"], ["utiliser", "use", "🔧"], ["appeler", "call", "📞"], ["répondre", "answer", "💬"],
+        ["rire", "laugh", "😄"], ["pleurer", "cry", "😢"], ["dessiner", "draw", "🖌️"], ["danser", "dance", "💃"], ["cuisiner", "cook", "👨‍🍳"], ["laver", "wash", "🧼"]
+      ]
+    }
+  ]
+}
