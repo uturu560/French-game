@@ -1218,11 +1218,12 @@
     updateDailyProgressDisplay();
     hideDailyLimitMessage();
     refreshSetSelector();
-    const setId = wordSets.length > 0 ? wordSets[0].id : setSelect.value;
-    setSelect.value = setId;
+    let setId = wordSets.length > 0 ? wordSets[0].id : setSelect.value;
+    if (setId === "daily") setId = wordSets.length > 0 ? wordSets[0].id : null;
+    setSelect.value = setId || "";
     levelSelect.value = "1";
     currentLevel = 1;
-    startSet(setId);
+    if (setId) startSet(setId);
   });
 
   const dailyLimitPracticeBtn = document.getElementById("daily-limit-practice-btn");
@@ -1235,11 +1236,12 @@
       updateDailyProgressDisplay();
       hideDailyLimitMessage();
       refreshSetSelector();
-      const setId = wordSets.length > 0 ? wordSets[0].id : setSelect.value;
-      setSelect.value = setId;
+      let setId = wordSets.length > 0 ? wordSets[0].id : setSelect.value;
+      if (setId === "daily") setId = wordSets.length > 0 ? wordSets[0].id : null;
+      setSelect.value = setId || "";
       levelSelect.value = "1";
       currentLevel = 1;
-      startSet(setId);
+      if (setId) startSet(setId);
     });
   }
   if (dailyLimitBackBtn) {
@@ -1259,7 +1261,15 @@
       updateOptionsPanelPracticeView();
       updateDailyProgressDisplay();
       winMessage.classList.add("hidden");
-      goToNextLevel();
+      hideDailyLimitMessage();
+      refreshSetSelector();
+      const setId = wordSets.length > 0 ? wordSets[0].id : null;
+      if (setId) {
+        setSelect.value = setId;
+        levelSelect.value = "1";
+        currentLevel = 1;
+        startSet(setId);
+      }
     });
   }
 
