@@ -65,7 +65,9 @@
       switchToPractice: "Practice mode",
       backToStart: "Back to start",
       partners: "Our partners",
-      sponsors: "Our sponsors",
+      sponsors: "Support the game",
+      supportTheGame: "Support the game",
+      redirectHint: "You'll be redirected to a new tab.",
       thankYouSponsor: "Thank you for supporting us...",
       yourStreak: "Your streak",
       darkMode: "Dark mode"
@@ -95,7 +97,9 @@
       switchToPractice: "Mode entraînement",
       backToStart: "Retour au début",
       partners: "Nos partenaires",
-      sponsors: "Nos sponsors",
+      sponsors: "Soutenir le jeu",
+      supportTheGame: "Soutenir le jeu",
+      redirectHint: "Vous serez redirigé vers un nouvel onglet.",
       thankYouSponsor: "Merci de nous soutenir...",
       yourStreak: "Votre série",
       darkMode: "Mode sombre"
@@ -519,6 +523,7 @@
 
   function updateSponsorButton() {
     const el = document.getElementById("support-link");
+    const hintEl = document.getElementById("support-redirect-hint");
     if (!el) return;
     const clicked = getSponsorClickedToday();
     const lang = uiLang || "en";
@@ -526,10 +531,15 @@
       el.classList.add("clicked");
       el.textContent = (UI[lang] && UI[lang].thankYouSponsor) ? UI[lang].thankYouSponsor : "Thank you for supporting us...";
       el.setAttribute("aria-label", el.textContent);
+      if (hintEl) hintEl.classList.add("hidden");
     } else {
       el.classList.remove("clicked");
-      el.textContent = (UI[lang] && UI[lang].sponsors) ? UI[lang].sponsors : "Our sponsors";
+      el.textContent = (UI[lang] && UI[lang].supportTheGame) ? UI[lang].supportTheGame : "Support the game";
       el.setAttribute("aria-label", el.textContent);
+      if (hintEl) {
+        hintEl.textContent = (UI[lang] && UI[lang].redirectHint) ? UI[lang].redirectHint : "You'll be redirected to a new tab.";
+        hintEl.classList.remove("hidden");
+      }
     }
   }
 
@@ -552,7 +562,12 @@
   function getTodayDailyStartIndex() {
     if (!dailyWords || dailyWords.length < 18) return 0;
     const numBlocks = Math.floor(dailyWords.length / 18);
-    const blockIndex = getDayOfYear() % Math.max(1, numBlocks);
+    const todayKey = getTodayKey();
+    let seed = 0;
+    for (let i = 0; i < todayKey.length; i++) {
+      seed = ((seed << 5) - seed + todayKey.charCodeAt(i)) | 0;
+    }
+    const blockIndex = Math.abs(seed) % Math.max(1, numBlocks);
     return blockIndex * 18;
   }
 
@@ -811,6 +826,7 @@
 
   function renderGame(set, level) {
     gameArea.innerHTML = "";
+    clearSupportSpotlight();
     winMessage.classList.add("hidden");
     const timeupMessage = document.getElementById("timeup-message");
     if (timeupMessage) timeupMessage.classList.add("hidden");
@@ -984,6 +1000,24 @@
     }, 1400);
   }
 
+  function clearSupportSpotlight() {
+    if (window._supportSpotlightTimeout) {
+      clearTimeout(window._supportSpotlightTimeout);
+      window._supportSpotlightTimeout = null;
+    }
+    if (window._supportSpotlightEndTimeout) {
+      clearTimeout(window._supportSpotlightEndTimeout);
+      window._supportSpotlightEndTimeout = null;
+    }
+    const overlay = document.getElementById("support-spotlight-overlay");
+    const supportLink = document.getElementById("support-link");
+    if (overlay) {
+      overlay.classList.add("hidden");
+      overlay.setAttribute("aria-hidden", "true");
+    }
+    if (supportLink) supportLink.classList.remove("support-spotlight");
+  }
+
   function showWin(elapsedSeconds, stars, dailyLimitReached) {
     document.getElementById("win-score-value").textContent = roundScore;
     const remaining = Math.max(0, ROUND_TIME_SECONDS - (elapsedSeconds || 0));
@@ -1014,6 +1048,28 @@
       if (winPracticeBtnEl) winPracticeBtnEl.classList.add("hidden");
     }
     winMessage.classList.remove("hidden");
+    if (dailyLimitReached) {
+      const streak = getStreak();
+      const showSpotlight = streak === 1 || (streak >= 7 && streak % 7 === 0);
+      if (showSpotlight) {
+        if (window._supportSpotlightTimeout) clearTimeout(window._supportSpotlightTimeout);
+        if (window._supportSpotlightEndTimeout) clearTimeout(window._supportSpotlightEndTimeout);
+        window._supportSpotlightTimeout = setTimeout(function () {
+          const overlay = document.getElementById("support-spotlight-overlay");
+          const supportLink = document.getElementById("support-link");
+          if (overlay && supportLink) {
+            overlay.classList.remove("hidden");
+            overlay.setAttribute("aria-hidden", "false");
+            supportLink.classList.add("support-spotlight");
+            window._supportSpotlightEndTimeout = setTimeout(function () {
+              overlay.classList.add("hidden");
+              overlay.setAttribute("aria-hidden", "true");
+              supportLink.classList.remove("support-spotlight");
+            }, 2000);
+          }
+        }, 500);
+      }
+    }
   }
 
   function startSet(setId) {
@@ -1091,6 +1147,9 @@
   }
 
   function initSelector() {
+    if (getDailyCountToday() < DAILY_CHALLENGE_LEVELS) {
+      setGameMode("daily");
+    }
     updateModeSwitcherUI();
     updateOptionsPanelPracticeView();
     refreshSetSelector();
@@ -1123,6 +1182,7 @@
 
   function goToNextLevel() {
     if (!currentSet || !currentLevelCompleted) return;
+    clearSupportSpotlight();
     winMessage.classList.add("hidden");
     updateLevelDropdown();
     const maxLevelThisSet = getMaxLevel(currentSet);
@@ -1153,11 +1213,13 @@
 
   winReplayBtn.addEventListener("click", () => {
     if (!currentSet) return;
+    clearSupportSpotlight();
     winMessage.classList.add("hidden");
     renderGame(currentSet, currentLevel);
   });
 
   winBackBtn.addEventListener("click", () => {
+    clearSupportSpotlight();
     winMessage.classList.add("hidden");
     levelSelect.value = "1";
     currentLevel = 1;
@@ -1260,7 +1322,8 @@
       updateModeSwitcherUI();
       updateOptionsPanelPracticeView();
       updateDailyProgressDisplay();
-      winMessage.classList.add("hidden");
+      clearSupportSpotlight();
+    winMessage.classList.add("hidden");
       hideDailyLimitMessage();
       refreshSetSelector();
       const setId = wordSets.length > 0 ? wordSets[0].id : null;
