@@ -522,8 +522,8 @@
   }
 
   function updateSponsorButton() {
-    const el = document.getElementById("support-link");
-    const hintEl = document.getElementById("support-redirect-hint");
+    const el = document.getElementById("contribute-link");
+    const hintEl = document.getElementById("redirect-hint");
     if (!el) return;
     const clicked = getSponsorClickedToday();
     const lang = uiLang || "en";
@@ -1009,13 +1009,13 @@
       clearTimeout(window._supportSpotlightEndTimeout);
       window._supportSpotlightEndTimeout = null;
     }
-    const overlay = document.getElementById("support-spotlight-overlay");
-    const supportLink = document.getElementById("support-link");
+    const overlay = document.getElementById("highlight-overlay");
+    const supportLink = document.getElementById("contribute-link");
     if (overlay) {
       overlay.classList.add("hidden");
       overlay.setAttribute("aria-hidden", "true");
     }
-    if (supportLink) supportLink.classList.remove("support-spotlight");
+    if (supportLink) supportLink.classList.remove("cta-highlight");
   }
 
   function showWin(elapsedSeconds, stars, dailyLimitReached) {
@@ -1055,16 +1055,16 @@
         if (window._supportSpotlightTimeout) clearTimeout(window._supportSpotlightTimeout);
         if (window._supportSpotlightEndTimeout) clearTimeout(window._supportSpotlightEndTimeout);
         window._supportSpotlightTimeout = setTimeout(function () {
-          const overlay = document.getElementById("support-spotlight-overlay");
-          const supportLink = document.getElementById("support-link");
+          const overlay = document.getElementById("highlight-overlay");
+          const supportLink = document.getElementById("contribute-link");
           if (overlay && supportLink) {
             overlay.classList.remove("hidden");
             overlay.setAttribute("aria-hidden", "false");
-            supportLink.classList.add("support-spotlight");
+            supportLink.classList.add("cta-highlight");
             window._supportSpotlightEndTimeout = setTimeout(function () {
               overlay.classList.add("hidden");
               overlay.setAttribute("aria-hidden", "true");
-              supportLink.classList.remove("support-spotlight");
+              supportLink.classList.remove("cta-highlight");
             }, 2000);
           }
         }, 500);
@@ -1336,7 +1336,7 @@
     });
   }
 
-  const supportLinkEl = document.getElementById("support-link");
+  const supportLinkEl = document.getElementById("contribute-link");
   if (supportLinkEl) {
     supportLinkEl.addEventListener("click", function (e) {
       if (getSponsorClickedToday()) {
