@@ -310,6 +310,12 @@ body {
   border-color: #0284c7;
 }
 
+#faq-link {
+  flex: none;
+  text-decoration: none;
+  min-width: auto;
+}
+
 .daily-progress-wrap {
   display: flex;
   align-items: center;
@@ -1076,24 +1082,285 @@ html.theme-dark .card.matched .card-front {
   animation: streak-fire 1.2s ease-in-out infinite;
 }
 
-@media (max-width: 600px) {
-  .main-inner {
-    flex-direction: column;
-  }
-  .options-panel {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    border-right: none;
-    border-bottom: 3px solid rgba(56, 189, 248, 0.4);
-  }
-  .options-title {
-    width: 100%;
+/* Options toggle — visible only on small screens */
+.options-toggle {
+  display: none;
+  margin: 0.5rem auto 0;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(56, 189, 248, 0.2);
+  color: var(--text-heading);
+  border: 2px solid var(--border-panel);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.options-toggle:hover,
+.options-toggle:focus-visible {
+  background: rgba(56, 189, 248, 0.35);
+  transform: scale(1.02);
+}
+
+.options-close {
+  display: none;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.options-close:hover,
+.options-close:focus-visible {
+  background: rgba(56, 189, 248, 0.2);
+  color: var(--text-primary);
+}
+
+.options-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.options-panel-header .options-title {
+  margin: 0;
+}
+
+.options-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 8;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+body.options-open .options-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+  .options-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
-@media (min-width: 500px) {
+@media (max-width: 600px) {
+  .main-inner {
+    flex-direction: row;
+  }
+
+  .options-overlay {
+    display: block;
+  }
+
+  .options-panel {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 9;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-right: 4px solid var(--border-panel);
+    border-radius: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body.options-open .options-panel {
+    transform: translateX(0);
+  }
+
+  .options-close {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .options-title {
+    width: auto;
+  }
+
+  .header {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .instruction {
+    font-size: clamp(0.75rem, 2vw, 0.9rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .game-area {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+  }
+
+  .game-board-wrap {
+    padding: 0.75rem;
+  }
+
+  .card {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .game-area {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 501px) {
   .game-area {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+/* About page — allow scroll (override game page overflow: hidden) */
+html:has(body.about-page) {
+  overflow: auto;
+  height: auto;
+}
+
+.about-page {
+  overflow: auto;
+  height: auto;
+  min-height: 100vh;
+  display: block;
+}
+
+.about-page .header-top {
+  margin-bottom: 0;
+}
+
+.about-site-title {
+  margin: 0;
+  font-size: clamp(1.2rem, 3.5vw, 1.75rem);
+  font-weight: 800;
+  color: var(--text-heading);
+}
+
+.about-site-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.about-site-link:hover,
+.about-site-link:focus-visible {
+  text-decoration: underline;
+}
+
+.about-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.about-nav .btn {
+  text-decoration: none;
+}
+
+.about-nav-current {
+  font-weight: 700;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.ad-slot {
+  min-height: 90px;
+  background: var(--bg-panel);
+  margin: 0;
+  padding: 0.5rem 1rem;
+}
+
+.ad-slot-bottom {
+  min-height: 250px;
+  margin-top: 1rem;
+}
+
+.about-main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 1rem;
+}
+
+@media (max-width: 380px) {
+  .about-main {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+.about-content {
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.about-content h2 {
+  font-size: 1.25rem;
+  color: var(--text-heading);
+  margin: 1.5rem 0 0.5rem;
+  scroll-margin-top: 1rem;
+}
+
+.about-content h2:first-child {
+  margin-top: 0;
+}
+
+.about-content h3 {
+  font-size: 1.05rem;
+  color: var(--text-heading);
+  margin: 1.25rem 0 0.35rem;
+  scroll-margin-top: 1rem;
+}
+
+.faq-list h3:first-of-type {
+  margin-top: 0.5rem;
+}
+
+.about-content p {
+  margin: 0 0 0.75rem;
+}
+
+.about-content ul {
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
+}
+
+.about-content li {
+  margin-bottom: 0.35rem;
+}
+
+.about-footer {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-top: 1px solid var(--border-panel);
+  margin-top: 1rem;
+}
+
+.about-footer a {
+  color: var(--text-heading);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.about-footer a:hover,
+.about-footer a:focus-visible {
+  text-decoration: underline;
 }

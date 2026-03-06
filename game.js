@@ -176,6 +176,14 @@
     } catch (_) {}
   }
 
+  function pauseBgMusic() {
+    if (bgAudio) try { bgAudio.pause(); } catch (_) {}
+  }
+
+  function resumeBgMusic() {
+    if (bgMusicStarted && bgAudio) bgAudio.play().catch(function () {});
+  }
+
   function playSound(type) {
     try {
       const ctx = window.audioCtx || (window.audioCtx = new (window.AudioContext || window.webkitAudioContext)());
@@ -458,15 +466,12 @@
   }
 
   function getGameMode() {
-    try {
-      const s = localStorage.getItem(STORAGE_KEY_MODE);
-      return s === "practice" ? "practice" : "daily";
-    } catch (_) { return "daily"; }
+    return "practice";
   }
 
   function setGameMode(mode) {
     try {
-      localStorage.setItem(STORAGE_KEY_MODE, mode === "practice" ? "practice" : "daily");
+      localStorage.setItem(STORAGE_KEY_MODE, "practice");
     } catch (_) {}
   }
 
@@ -638,7 +643,6 @@
   }
 
   function getMaxUnlockedLevel(setId) {
-    if (setId === "daily") return Math.min(3, Math.max(1, getDailyCountToday() + 1));
     const highestPassed = getHighestLevelPassed(setId);
     const maxUnlocked = Math.max(1, Math.min(10, highestPassed + 1));
     return maxUnlocked;
@@ -682,15 +686,8 @@
   }
 
   function updateLevelControlVisibility() {
-    const isDaily = currentSet && currentSet.id === "daily" && !isPracticeMode();
-    if (levelLabel) levelLabel.classList.toggle("hidden", isDaily);
-    if (levelSelectRow) levelSelectRow.classList.toggle("hidden", isDaily);
-    if (practiceLevelStrip) practiceLevelStrip.classList.toggle("hidden", isDaily);
-    if (dailyLevelWrap) {
-      dailyLevelWrap.classList.toggle("hidden", !isDaily);
-      if (isDaily && dailyLevelDisplay) dailyLevelDisplay.textContent = (currentLevel || 1) + " / 3";
-    }
-    if (!isDaily && practiceLevelStrip) updatePracticeLevelStrip();
+    if (practiceLevelStrip) practiceLevelStrip.classList.remove("hidden");
+    if (practiceLevelStrip) updatePracticeLevelStrip();
   }
 
   function buildPracticeLevelStrip() {
@@ -706,7 +703,7 @@
       btn.textContent = n;
       btn.addEventListener("click", () => {
         const level = parseInt(btn.dataset.level, 10);
-        const set = currentSet && currentSet.id !== "daily" ? currentSet : (wordSets[0] || null);
+        const set = currentSet || (wordSets[0] || null);
         if (!set) return;
         const maxUnlocked = getMaxUnlockedLevel(set.id);
         if (level > maxUnlocked) return;
@@ -719,7 +716,7 @@
   }
 
   function updatePracticeLevelStrip() {
-    if (!practiceLevelStrip || !currentSet || currentSet.id === "daily") return;
+    if (!practiceLevelStrip || !currentSet) return;
     const maxUnlocked = getMaxUnlockedLevel(currentSet.id);
     const maxLevel = getMaxLevel(currentSet);
     const buttons = practiceLevelStrip.querySelectorAll(".practice-level-btn");
@@ -941,19 +938,8 @@
           playSound("win");
           const optionsPanel = document.querySelector(".options-panel");
           if (optionsPanel) optionsPanel.classList.add("round-complete");
-          const dailyLimitReached = !isPracticeMode() && getDailyCountToday() >= DAILY_CHALLENGE_LEVELS;
-          if (dailyLimitReached) {
-            if (shouldShowCelebrationOverlay()) {
-              setCelebrationShownForMilestone(getStreak());
-              showDailyCompleteCelebration(function () { showWin(elapsed, stars, true); });
-            } else {
-              triggerConfetti();
-              showWin(elapsed, stars, true);
-            }
-          } else {
-            triggerConfetti();
-            showWin(elapsed, stars, false);
-          }
+          triggerConfetti();
+          showWin(elapsed, stars);
         }, 400);
       }
     } else {
@@ -1018,7 +1004,7 @@
     if (supportLink) supportLink.classList.remove("cta-highlight");
   }
 
-  function showWin(elapsedSeconds, stars, dailyLimitReached) {
+  function showWin(elapsedSeconds, stars) {
     document.getElementById("win-score-value").textContent = roundScore;
     const remaining = Math.max(0, ROUND_TIME_SECONDS - (elapsedSeconds || 0));
     document.getElementById("win-time-value").textContent = formatTime(remaining);
@@ -1037,51 +1023,16 @@
     }
     const winTextEl = document.getElementById("win-text");
     const winNextBtnEl = document.getElementById("win-next-btn");
-    const winPracticeBtnEl = document.getElementById("win-practice-btn");
-    if (dailyLimitReached) {
-      if (winTextEl) winTextEl.textContent = (UI[uiLang] && UI[uiLang].doneForTodayShort) ? UI[uiLang].doneForTodayShort : "Today's challenge complete!";
-      if (winNextBtnEl) winNextBtnEl.classList.add("hidden");
-      if (winPracticeBtnEl) winPracticeBtnEl.classList.remove("hidden");
-    } else {
-      if (winTextEl) winTextEl.textContent = UI[uiLang].youDidIt;
-      if (winNextBtnEl) winNextBtnEl.classList.remove("hidden");
-      if (winPracticeBtnEl) winPracticeBtnEl.classList.add("hidden");
-    }
+    if (winTextEl) winTextEl.textContent = UI[uiLang].youDidIt;
+    if (winNextBtnEl) winNextBtnEl.classList.remove("hidden");
     winMessage.classList.remove("hidden");
-    if (dailyLimitReached) {
-      const streak = getStreak();
-      const showSpotlight = streak === 1 || (streak >= 7 && streak % 7 === 0);
-      if (showSpotlight) {
-        if (window._supportSpotlightTimeout) clearTimeout(window._supportSpotlightTimeout);
-        if (window._supportSpotlightEndTimeout) clearTimeout(window._supportSpotlightEndTimeout);
-        window._supportSpotlightTimeout = setTimeout(function () {
-          const overlay = document.getElementById("highlight-overlay");
-          const supportLink = document.getElementById("contribute-link");
-          if (overlay && supportLink) {
-            overlay.classList.remove("hidden");
-            overlay.setAttribute("aria-hidden", "false");
-            supportLink.classList.add("cta-highlight");
-            window._supportSpotlightEndTimeout = setTimeout(function () {
-              overlay.classList.add("hidden");
-              overlay.setAttribute("aria-hidden", "true");
-              supportLink.classList.remove("cta-highlight");
-            }, 2000);
-          }
-        }, 500);
-      }
-    }
   }
 
   function startSet(setId) {
-    const set = setId === "daily" ? getTodayDailySet() : wordSets.find((s) => s.id === setId);
+    if (setId === "daily" && wordSets.length > 0) setId = wordSets[0].id;
+    const set = wordSets.find((s) => s.id === setId);
     if (!set || !set.pairs || set.pairs.length < PAIRS_PER_LEVEL) return;
     currentSet = set;
-    hideDailyLimitMessage();
-    if (!isPracticeMode() && getLevelsLeftToday() === 0) {
-      showDailyLimitMessage();
-      updateDailyProgressDisplay();
-      return;
-    }
     updateLevelDropdown();
     const maxUnlocked = getMaxUnlockedLevel(set.id);
     const maxLevel = getMaxLevel(set);
@@ -1131,53 +1082,34 @@
 
   function refreshSetSelector() {
     setSelect.innerHTML = "";
-    if (isPracticeMode()) {
-      wordSets.forEach((set) => {
-        const opt = document.createElement("option");
-        opt.value = set.id;
-        opt.textContent = setNames[uiLang][set.id] || set.name;
-        setSelect.appendChild(opt);
-      });
-    } else {
+    wordSets.forEach((set) => {
       const opt = document.createElement("option");
-      opt.value = "daily";
-      opt.textContent = setNames[uiLang].daily || "Today's challenge";
+      opt.value = set.id;
+      opt.textContent = setNames[uiLang][set.id] || set.name;
       setSelect.appendChild(opt);
-    }
+    });
   }
 
   function initSelector() {
-    if (getDailyCountToday() < DAILY_CHALLENGE_LEVELS) {
-      setGameMode("daily");
-    }
     updateModeSwitcherUI();
     updateOptionsPanelPracticeView();
     refreshSetSelector();
     buildPracticeLevelStrip();
     updateLevelDropdown();
-    if (isPracticeMode()) {
-      if (wordSets.length > 0) {
-        const saved = getSavedSetAndLevel();
-        const setExists = saved.setId && wordSets.some((s) => s.id === saved.setId);
-        const setId = setExists ? saved.setId : wordSets[0].id;
-        const set = wordSets.find((s) => s.id === setId);
-        const maxUnlocked = set ? getMaxUnlockedLevel(set.id) : 1;
-        const maxLevel = set ? getMaxLevel(set) : 10;
-        const maxSelectable = Math.min(maxUnlocked, maxLevel);
-        const level = setExists && saved.level >= 1 && saved.level <= maxSelectable ? saved.level : 1;
-        setSelect.value = setId;
-        levelSelect.value = String(level);
-        currentLevel = level;
-        startSet(setId);
-      }
-    } else {
-      setSelect.value = "daily";
-      const level = Math.min(3, Math.max(1, getDailyCountToday() + 1));
+    if (wordSets.length > 0) {
+      const saved = getSavedSetAndLevel();
+      const setExists = saved.setId && wordSets.some((s) => s.id === saved.setId);
+      const setId = setExists ? saved.setId : wordSets[0].id;
+      const set = wordSets.find((s) => s.id === setId);
+      const maxUnlocked = set ? getMaxUnlockedLevel(set.id) : 1;
+      const maxLevel = set ? getMaxLevel(set) : 10;
+      const maxSelectable = Math.min(maxUnlocked, maxLevel);
+      const level = setExists && saved.level >= 1 && saved.level <= maxSelectable ? saved.level : 1;
+      setSelect.value = setId;
       levelSelect.value = String(level);
       currentLevel = level;
-      startSet("daily");
+      startSet(setId);
     }
-    updateDailyProgressDisplay();
   }
 
   function goToNextLevel() {
@@ -1187,7 +1119,7 @@
     updateLevelDropdown();
     const maxLevelThisSet = getMaxLevel(currentSet);
     const nextLevel = currentLevel >= 10 ? 1 : currentLevel + 1;
-    const idx = currentSet.id === "daily" ? -1 : wordSets.findIndex((s) => s.id === currentSet.id);
+    const idx = wordSets.findIndex((s) => s.id === currentSet.id);
     const nextSet = idx >= 0 && idx < wordSets.length - 1 ? wordSets[idx + 1] : null;
     if (nextLevel > maxLevelThisSet && nextSet) {
       setSelect.value = nextSet.id;
@@ -1262,80 +1194,6 @@
     if (currentSet) startSet(currentSet.id);
   });
 
-  document.getElementById("mode-daily").addEventListener("click", () => {
-    setGameMode("daily");
-    updateModeSwitcherUI();
-    updateOptionsPanelPracticeView();
-    updateDailyProgressDisplay();
-    refreshSetSelector();
-    setSelect.value = "daily";
-    levelSelect.value = "1";
-    currentLevel = 1;
-    startSet("daily");
-  });
-  document.getElementById("mode-practice").addEventListener("click", () => {
-    setGameMode("practice");
-    updateModeSwitcherUI();
-    updateOptionsPanelPracticeView();
-    updateDailyProgressDisplay();
-    hideDailyLimitMessage();
-    refreshSetSelector();
-    let setId = wordSets.length > 0 ? wordSets[0].id : setSelect.value;
-    if (setId === "daily") setId = wordSets.length > 0 ? wordSets[0].id : null;
-    setSelect.value = setId || "";
-    levelSelect.value = "1";
-    currentLevel = 1;
-    if (setId) startSet(setId);
-  });
-
-  const dailyLimitPracticeBtn = document.getElementById("daily-limit-practice-btn");
-  const dailyLimitBackBtn = document.getElementById("daily-limit-back-btn");
-  if (dailyLimitPracticeBtn) {
-    dailyLimitPracticeBtn.addEventListener("click", () => {
-      setGameMode("practice");
-      updateModeSwitcherUI();
-      updateOptionsPanelPracticeView();
-      updateDailyProgressDisplay();
-      hideDailyLimitMessage();
-      refreshSetSelector();
-      let setId = wordSets.length > 0 ? wordSets[0].id : setSelect.value;
-      if (setId === "daily") setId = wordSets.length > 0 ? wordSets[0].id : null;
-      setSelect.value = setId || "";
-      levelSelect.value = "1";
-      currentLevel = 1;
-      if (setId) startSet(setId);
-    });
-  }
-  if (dailyLimitBackBtn) {
-    dailyLimitBackBtn.addEventListener("click", () => {
-      hideDailyLimitMessage();
-      levelSelect.value = "1";
-      currentLevel = 1;
-      if (currentSet) startSet(currentSet.id);
-    });
-  }
-
-  const winPracticeBtn = document.getElementById("win-practice-btn");
-  if (winPracticeBtn) {
-    winPracticeBtn.addEventListener("click", () => {
-      setGameMode("practice");
-      updateModeSwitcherUI();
-      updateOptionsPanelPracticeView();
-      updateDailyProgressDisplay();
-      clearSupportSpotlight();
-    winMessage.classList.add("hidden");
-      hideDailyLimitMessage();
-      refreshSetSelector();
-      const setId = wordSets.length > 0 ? wordSets[0].id : null;
-      if (setId) {
-        setSelect.value = setId;
-        levelSelect.value = "1";
-        currentLevel = 1;
-        startSet(setId);
-      }
-    });
-  }
-
   const supportLinkEl = document.getElementById("contribute-link");
   if (supportLinkEl) {
     supportLinkEl.addEventListener("click", function (e) {
@@ -1350,7 +1208,12 @@
     });
   }
   document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "visible") updateSponsorButton();
+    if (document.visibilityState === "visible") {
+      updateSponsorButton();
+      resumeBgMusic();
+    } else {
+      pauseBgMusic();
+    }
   });
 
   document.getElementById("lang-en").addEventListener("click", () => { applyLanguage("en"); startBgMusic(); });
@@ -1361,6 +1224,21 @@
       applyTheme(getSavedTheme() === "dark" ? "light" : "dark");
     });
   }
+
+  function setOptionsOpen(open) {
+    document.body.classList.toggle("options-open", open);
+    var toggle = document.getElementById("options-toggle");
+    var overlay = document.getElementById("options-overlay");
+    if (toggle) toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    if (overlay) overlay.setAttribute("aria-hidden", open ? "false" : "true");
+  }
+
+  var optionsToggle = document.getElementById("options-toggle");
+  var optionsClose = document.getElementById("options-close");
+  var optionsOverlay = document.getElementById("options-overlay");
+  if (optionsToggle) optionsToggle.addEventListener("click", function () { setOptionsOpen(true); });
+  if (optionsClose) optionsClose.addEventListener("click", function () { setOptionsOpen(false); });
+  if (optionsOverlay) optionsOverlay.addEventListener("click", function () { setOptionsOpen(false); });
 
   loadSessionScore();
 
