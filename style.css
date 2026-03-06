@@ -310,7 +310,8 @@ body {
   border-color: #0284c7;
 }
 
-#faq-link {
+#faq-link,
+.add-to-chrome-btn {
   flex: none;
   text-decoration: none;
   min-width: auto;
