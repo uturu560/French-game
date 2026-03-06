@@ -1270,17 +1270,61 @@ html:has(body.about-page) {
 .about-nav {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
 }
 
 .about-nav .btn {
   text-decoration: none;
 }
 
+/* Nav bar links (text style, not buttons) */
+.about-nav .nav-bar-link {
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: none;
+  border: none;
+  border-radius: 0;
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  box-shadow: none;
+  transform: none;
+  flex: none;
+  min-width: 0;
+}
+
+.about-nav .nav-bar-link:hover,
+.about-nav .nav-bar-link:focus-visible {
+  color: var(--text-heading);
+  text-decoration: underline;
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
+
+.about-nav .nav-bar-link:not(:last-child)::after {
+  content: " · ";
+  margin-left: 0.25rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+  font-weight: 400;
+}
+
 .about-nav-current {
   font-weight: 700;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+}
+
+.about-nav .about-nav-current:not(:last-child)::after {
+  content: " · ";
+  margin-left: 0.25rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+  font-weight: 400;
 }
 
 .ad-slot {
