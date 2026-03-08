@@ -242,7 +242,8 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .main-inner {
@@ -1408,4 +1409,53 @@ html:has(body.about-page) {
 .about-footer a:hover,
 .about-footer a:focus-visible {
   text-decoration: underline;
+}
+
+/* Site footer (game page and about pages) — single nav with five links */
+.site-footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 1rem 1rem;
+  border-top: 4px solid var(--border-header);
+  background: var(--bg-header);
+  margin-top: 0;
+}
+
+.site-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.site-footer-nav a {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.site-footer-nav a:hover,
+.site-footer-nav a:focus-visible {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+.site-footer-nav a:not(:last-child)::after {
+  content: " · ";
+  margin-left: 0.25rem;
+  color: var(--text-muted);
+  opacity: 0.8;
+  font-weight: 400;
+  pointer-events: none;
+}
+
+.about-footer .site-footer-nav {
+  padding: 0;
+}
+
+.about-footer .site-footer-nav a {
+  color: var(--text-heading);
 }
