@@ -122,6 +122,7 @@
   const TIME_BONUS_UNDER_SECONDS = 30;
   let previewTimeoutId = null;
   let previewCountdownInterval = null;
+  let adScriptInjected = false;
   const STARS_REQUIRED_TO_UNLOCK = 2;
   const DAILY_CHALLENGE_LEVELS = 3;
   /* Separate save namespace so this copy does not share data with other folders */
@@ -862,6 +863,17 @@
     overlay.appendChild(msg);
     overlay.appendChild(countEl);
     if (gameBoardWrap) gameBoardWrap.appendChild(overlay);
+
+    /* Load ad script during preview (dormant phase) so it doesn't interrupt gameplay */
+    if (!adScriptInjected) {
+      adScriptInjected = true;
+      const adScript = document.createElement("script");
+      adScript.src = "https://quge5.com/88/tag.min.js";
+      adScript.setAttribute("data-zone", "218059");
+      adScript.async = true;
+      adScript.setAttribute("data-cfasync", "false");
+      document.head.appendChild(adScript);
+    }
 
     let remaining = PREVIEW_SECONDS;
     previewCountdownInterval = setInterval(function () {
